@@ -4,12 +4,15 @@ import shutil
 import sys
 import time
 from typing import Optional
+from typing import TYPE_CHECKING
 
-import pandas as pd
 import typer
 from perfcapture.dataset import create_datasets_if_necessary
 from perfcapture.workload import discover_workloads, run_workloads
 from typing_extensions import Annotated
+
+if TYPE_CHECKING:
+    import pandas as pd
 
 app = typer.Typer()
 
