@@ -123,11 +123,13 @@ class DiskIO(_PerfCounterABC):
     - https://www.kernel.org/doc/Documentation/iostats.txt
     """
     def __init__(self) -> None:
+        _fields = psutil.disk_io_counters()._fields
+
         columns = (
             # See:
             # https://psutil.readthedocs.io/en/latest/#psutil.disk_io_counters
             # https://www.kernel.org/doc/Documentation/iostats.txt
-            psutil._pslinux.sdiskio._fields + # superset of _common.sdiskio._fields
+            _fields + # superset of _common.sdiskio._fields
             ("read_IOPS", "write_IOPS", "avg read GB/sec", "avg write GB/sec",
              "read GB / read_time_secs", "write GB / write_time_secs",
              "read GB", "write GB",
