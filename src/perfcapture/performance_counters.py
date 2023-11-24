@@ -1,5 +1,8 @@
 import abc
 import pathlib
+import platform
+import re
+import sys
 from collections import namedtuple
 from dataclasses import InitVar, dataclass, field
 from datetime import datetime
@@ -214,9 +217,12 @@ def _get_partition_name_from_path(dataset_path: pathlib.Path) -> str:
     partitions: list[psutil._common.sdiskpart] = psutil.disk_partitions()
     for partition in partitions:
         if pathlib.Path(partition.mountpoint) == dataset_mount_point:
-            return pathlib.Path(partition.device).resolve().parts[-1]
+            disk = pathlib.Path(partition.device).resolve().parts[-1]
+            if platform.system() == "Darwin":
+                disk = re.match(r"disk\d+", disk).group()
+            return disk
     raise RuntimeError(f"Could not find partition for {dataset_path}")
-            
+
         
 def _get_mount_point_from_path(p: pathlib.Path) -> pathlib.Path:
     if len(p.parts) == 0:
